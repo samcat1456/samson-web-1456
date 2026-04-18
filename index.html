@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CircuitForge — Arduino Solutions</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow+Condensed:wght@300;600;800&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --bg2: #0f1318;
+    --panel: #141920;
+    --border: #1e2a35;
+    --accent: #f97316;
+    --accent2: #22d3ee;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --mono: 'Share Tech Mono', monospace;
+    --display: 'Barlow Condensed', sans-serif;
+    --body: 'Barlow', sans-serif;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body);
+    overflow-x: hidden;
+  }
+
+  /* ── CIRCUIT BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 3rem;
+    background: rgba(10,12,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.6rem;
+    letter-spacing: 0.04em;
+    color: var(--text);
+  }
+  .logo span { color: var(--accent); }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  .nav-cta {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 0.55rem 1.4rem;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    font-weight: bold;
+    transition: background 0.2s;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+  .nav-cta:hover { background: #fb923c; }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 0 3rem;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .hero-content { max-width: 700px; }
+
+  .hero-tag {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-tag::before {
+    content: '';
+    display: inline-block;
+    width: 2rem;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  h1 .outline {
+    -webkit-text-stroke: 1px var(--text);
+    color: transparent;
+  }
+  h1 .highlight { color: var(--accent); }
+
+  .hero-desc {
+    margin-top: 2rem;
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.75;
+    max-width: 480px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-btns {
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 1rem;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 0.9rem 2rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s, transform 0.15s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+  .btn-primary:hover { background: #fb923c; transform: translateY(-2px); }
+
+  .btn-ghost {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    background: transparent;
+    color: var(--accent2);
+    border: 1px solid var(--accent2);
+    padding: 0.9rem 2rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-ghost:hover { background: rgba(34,211,238,0.08); transform: translateY(-2px); }
+
+  .hero-stats {
+    position: absolute;
+    right: 3rem;
+    bottom: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .stat {
+    text-align: right;
+    border-right: 2px solid var(--accent);
+    padding-right: 1.2rem;
+  }
+  .stat-num {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 2.2rem;
+    color: var(--text);
+    line-height: 1;
+  }
+  .stat-num span { color: var(--accent); }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-top: 0.2rem;
+  }
+
+  /* circuit art */
+  .circuit-art {
+    position: absolute;
+    right: -80px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 520px;
+    height: 520px;
+    opacity: 0.07;
+    pointer-events: none;
+  }
+
+  /* ── TICKER ── */
+  .ticker {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    background: var(--accent);
+    padding: 0.65rem 0;
+    white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-block;
+    animation: ticker 30s linear infinite;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: #000;
+    font-weight: bold;
+  }
+  .ticker-inner span { margin: 0 2rem; }
+  .ticker-sep { color: rgba(0,0,0,0.4); }
+
+  /* ── SECTIONS ── */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 3rem;
+  }
+
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .section-tag::before {
+    content: '//';
+    color: var(--muted);
+  }
+
+  h2 {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    text-transform: uppercase;
+    line-height: 0.95;
+    letter-spacing: -0.01em;
+  }
+  h2 .dim { color: var(--muted); }
+
+  /* ── SERVICES ── */
+  #services { background: var(--bg2); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1px;
+    margin-top: 3.5rem;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .service-card {
+    background: var(--panel);
+    padding: 2.5rem 2rem;
+    transition: background 0.25s;
+    cursor: default;
+  }
+  .service-card:hover { background: #1a2230; }
+
+  .service-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(249,115,22,0.1);
+    border: 1px solid rgba(249,115,22,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+  }
+
+  .service-card h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.2rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+    color: var(--text);
+  }
+
+  .service-card p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .service-card .learn-more {
+    margin-top: 1.5rem;
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: gap 0.2s;
+  }
+  .service-card:hover .learn-more { gap: 0.9rem; }
+
+  /* ── PRODUCTS ── */
+  #products {}
+
+  .products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .product-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.2s;
+  }
+  .product-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+  }
+
+  .product-img {
+    width: 100%;
+    height: 180px;
+    background: linear-gradient(135deg, #0f1f30 0%, #0a1520 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .product-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 60%, var(--panel));
+  }
+
+  .product-info { padding: 1.5rem; }
+
+  .product-info h3 {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.4rem;
+  }
+
+  .product-info .desc {
+    font-size: 0.83rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .price {
+    font-family: var(--mono);
+    font-size: 1.1rem;
+    color: var(--accent);
+  }
+
+  .add-btn {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    transition: background 0.2s, color 0.2s;
+  }
+  .add-btn:hover { background: var(--accent); color: #000; }
+
+  /* ── WHY US ── */
+  #why {
+    background: var(--bg2);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .why-left h2 { margin-bottom: 1.5rem; }
+
+  .why-left p {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.85;
+    margin-bottom: 2rem;
+  }
+
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+  .why-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .why-list li::before {
+    content: '▶';
+    color: var(--accent);
+    font-size: 0.6rem;
+    margin-top: 0.35rem;
+    flex-shrink: 0;
+  }
+  .why-list li strong { color: var(--text); }
+
+  .terminal {
+    background: #050709;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+  }
+
+  .terminal-bar {
+    background: var(--panel);
+    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; }
+  .dot.y { background: #febc2e; }
+  .dot.g { background: #28c840; }
+
+  .terminal-title {
+    font-size: 0.65rem;
+    color: var(--muted);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .terminal-body { padding: 1.5rem; line-height: 2.2; }
+
+  .t-comment { color: #4a6741; }
+  .t-cmd { color: var(--accent2); }
+  .t-string { color: #86efac; }
+  .t-var { color: var(--accent); }
+  .t-out { color: var(--muted); }
+  .t-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 1em;
+    background: var(--accent);
+    vertical-align: text-bottom;
+    animation: blink 1s step-end infinite;
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  #contact h2 { margin-bottom: 1rem; }
+  #contact p { color: var(--muted); font-size: 0.95rem; line-height: 1.75; margin-bottom: 2.5rem; }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: left;
+  }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+
+  input, textarea, select {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.82rem;
+    padding: 0.75rem 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+  textarea { resize: vertical; min-height: 120px; }
+
+  .submit-btn {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    align-self: flex-start;
+    transition: background 0.2s, transform 0.15s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    margin-top: 0.5rem;
+  }
+  .submit-btn:hover { background: #fb923c; transform: translateY(-2px); }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  footer .logo { font-size: 1.2rem; }
+
+  .footer-links { display: flex; gap: 2rem; }
+  .footer-links a {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+
+  .footer-copy {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes ticker {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    #hero { padding: 0 1.5rem; }
+    .hero-stats { position: static; flex-direction: row; margin-top: 3rem; }
+    .stat { text-align: left; border-right: none; border-left: 2px solid var(--accent); padding: 0 0 0 1rem; }
+    #why { grid-template-columns: 1fr; padding: 4rem 1.5rem; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { padding: 2rem 1.5rem; flex-direction: column; text-align: center; }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Circuit<span>Forge</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">SERVICES</a></li>
+    <li><a href="#products">PRODUCTS</a></li>
+    <li><a href="#about">ABOUT</a></li><li><a href="#why">WHY US</a></li>
+    <li><a href="#contact">CONTACT</a></li>
+  </ul>
+  <button class="nav-cta">GET A QUOTE</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <svg class="circuit-art" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="250" cy="250" r="200" stroke="white" stroke-width="1"/>
+    <circle cx="250" cy="250" r="150" stroke="white" stroke-width="1"/>
+    <circle cx="250" cy="250" r="100" stroke="white" stroke-width="1"/>
+    <circle cx="250" cy="250" r="50" stroke="white" stroke-width="2"/>
+    <line x1="250" y1="50" x2="250" y2="450" stroke="white" stroke-width="0.5"/>
+    <line x1="50" y1="250" x2="450" y2="250" stroke="white" stroke-width="0.5"/>
+    <line x1="109" y1="109" x2="391" y2="391" stroke="white" stroke-width="0.5"/>
+    <line x1="391" y1="109" x2="109" y2="391" stroke="white" stroke-width="0.5"/>
+    <rect x="230" y="230" width="40" height="40" stroke="white" stroke-width="2"/>
+    <rect x="215" y="215" width="70" height="70" stroke="white" stroke-width="1"/>
+    <circle cx="250" cy="100" r="6" fill="white"/>
+    <circle cx="400" cy="250" r="6" fill="white"/>
+    <circle cx="250" cy="400" r="6" fill="white"/>
+    <circle cx="100" cy="250" r="6" fill="white"/>
+    <circle cx="145" cy="145" r="4" fill="white"/>
+    <circle cx="355" cy="145" r="4" fill="white"/>
+    <circle cx="355" cy="355" r="4" fill="white"/>
+    <circle cx="145" cy="355" r="4" fill="white"/>
+    <rect x="244" y="44" width="12" height="12" stroke="white" stroke-width="1.5" fill="none"/>
+    <rect x="394" y="244" width="12" height="12" stroke="white" stroke-width="1.5" fill="none"/>
+    <rect x="244" y="444" width="12" height="12" stroke="white" stroke-width="1.5" fill="none"/>
+    <rect x="44" y="244" width="12" height="12" stroke="white" stroke-width="1.5" fill="none"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="hero-tag">EST. 2019 &nbsp;·&nbsp; ARDUINO SPECIALISTS</div>
+    <h1>
+      <span class="outline">Build</span><br>
+      <span class="highlight">Smarter</span><br>
+      Hardware
+    </h1>
+    <p class="hero-desc">
+      From concept to production — we design, prototype, and supply custom Arduino-based solutions for businesses across the UK. No project too complex.
+    </p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">START A PROJECT</button>
+      <button class="btn-ghost" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">VIEW PRODUCTS</button>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">500<span>+</span></div>
+      <div class="stat-label">PROJECTS DELIVERED</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">98<span>%</span></div>
+      <div class="stat-label">CLIENT SATISFACTION</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">48<span>h</span></div>
+      <div class="stat-label">RAPID PROTOTYPE TURNAROUND</div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>ARDUINO UNO <span class="ticker-sep">◆</span></span>
+    <span>CUSTOM PCB DESIGN <span class="ticker-sep">◆</span></span>
+    <span>IoT INTEGRATION <span class="ticker-sep">◆</span></span>
+    <span>SENSOR SYSTEMS <span class="ticker-sep">◆</span></span>
+    <span>WIRELESS MODULES <span class="ticker-sep">◆</span></span>
+    <span>RAPID PROTOTYPING <span class="ticker-sep">◆</span></span>
+    <span>AUTOMATION <span class="ticker-sep">◆</span></span>
+    <span>FIRMWARE DEVELOPMENT <span class="ticker-sep">◆</span></span>
+    <span>ARDUINO UNO <span class="ticker-sep">◆</span></span>
+    <span>CUSTOM PCB DESIGN <span class="ticker-sep">◆</span></span>
+    <span>IoT INTEGRATION <span class="ticker-sep">◆</span></span>
+    <span>SENSOR SYSTEMS <span class="ticker-sep">◆</span></span>
+    <span>WIRELESS MODULES <span class="ticker-sep">◆</span></span>
+    <span>RAPID PROTOTYPING <span class="ticker-sep">◆</span></span>
+    <span>AUTOMATION <span class="ticker-sep">◆</span></span>
+    <span>FIRMWARE DEVELOPMENT <span class="ticker-sep">◆</span></span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-tag">WHAT WE DO</div>
+  <h2>Our <span class="dim">Services</span></h2>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">⚡</div>
+      <h3>Custom Prototyping</h3>
+      <p>We take your idea from napkin sketch to working Arduino prototype in as little as 48 hours. Fast, precise, and built to your exact specification.</p>
+      <div class="learn-more">LEARN MORE →</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📡</div>
+      <h3>IoT Solutions</h3>
+      <p>Connect your hardware to the cloud. We build end-to-end IoT systems using Arduino and compatible boards — from sensor nodes to dashboards.</p>
+      <div class="learn-more">LEARN MORE →</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔧</div>
+      <h3>Firmware Development</h3>
+      <p>Clean, optimised C/C++ code for Arduino platforms. We write, test, and document firmware so your hardware performs reliably in the real world.</p>
+      <div class="learn-more">LEARN MORE →</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🏭</div>
+      <h3>Production & Supply</h3>
+      <p>Ready to scale? We handle volume production, component sourcing, quality testing, and fulfilment so you can focus on your product.</p>
+      <div class="learn-more">LEARN MORE →</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🎓</div>
+      <h3>Training & Workshops</h3>
+      <p>Hands-on Arduino workshops for your team — from beginner introductions to advanced embedded systems. In-person or remote.</p>
+      <div class="learn-more">LEARN MORE →</div>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🛠️</div>
+      <h3>Technical Support</h3>
+      <p>Stuck on a build? Our engineers provide troubleshooting, code review, and ongoing support for existing Arduino-based projects.</p>
+      <div class="learn-more">LEARN MORE →</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="products-header">
+    <div>
+      <div class="section-tag">SHOP</div>
+      <h2>Popular <span class="dim">Products</span></h2>
+    </div>
+    <button class="btn-ghost" style="font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.1em; background: transparent; color: var(--accent2); border: 1px solid var(--accent2); padding: 0.7rem 1.5rem; cursor: pointer;">VIEW ALL →</button>
+  </div>
+
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="product-img">🔵</div>
+      <div class="product-info">
+        <h3>Arduino Uno R4 WiFi</h3>
+        <p class="desc">The latest Uno with built-in WiFi, LED matrix, and enhanced processing power. Perfect for IoT projects.</p>
+        <div class="product-footer">
+          <span class="price">£27.99</span>
+          <button class="add-btn">ADD TO CART</button>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img">🟢</div>
+      <div class="product-info">
+        <h3>Arduino Mega 2560</h3>
+        <p class="desc">Maximum I/O pins for complex projects. 54 digital, 16 analog inputs — the powerhouse of the Arduino range.</p>
+        <div class="product-footer">
+          <span class="price">£35.50</span>
+          <button class="add-btn">ADD TO CART</button>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img">🟠</div>
+      <div class="product-info">
+        <h3>Starter Kit Pro</h3>
+        <p class="desc">Everything you need to begin: Arduino Uno, 30+ components, breadboard, and a step-by-step project guide.</p>
+        <div class="product-footer">
+          <span class="price">£54.99</span>
+          <button class="add-btn">ADD TO CART</button>
+        </div>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-img">🔴</div>
+      <div class="product-info">
+        <h3>Sensor Bundle Pack</h3>
+        <p class="desc">37 sensors including temperature, ultrasonic, IR, gyroscope, and more. Fully Arduino-compatible.</p>
+        <div class="product-footer">
+          <span class="price">£19.99</span>
+          <button class="add-btn">ADD TO CART</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="why-left">
+    <div class="section-tag">WHY CIRCUITFORGE</div>
+    <h2>Built by Engineers, <span class="dim">for Engineers</span></h2>
+    <p>We're not a generic electronics shop. CircuitForge is a team of embedded systems engineers who've shipped real products — and we bring that depth to every client project.</p>
+    <ul class="why-list">
+      <li><strong>UK-based team</strong> — fast response times and no timezone headaches</li>
+      <li><strong>End-to-end capability</strong> — from schematic to firmware to production</li>
+      <li><strong>Arduino-certified specialists</strong> — deep platform knowledge, not surface-level</li>
+      <li><strong>Transparent pricing</strong> — clear quotes with no hidden costs</li>
+      <li><strong>Ongoing support</strong> — we don't disappear after delivery</li>
+    </ul>
+  </div>
+
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="dot r"></div>
+      <div class="dot y"></div>
+      <div class="dot g"></div>
+      <div class="terminal-title">circuitforge_demo.ino</div>
+    </div>
+    <div class="terminal-body">
+      <div class="t-comment">// CircuitForge — smart sensor example</div>
+      <div><span class="t-cmd">#include</span> <span class="t-string">&lt;DHT.h&gt;</span></div>
+      <div><span class="t-cmd">#include</span> <span class="t-string">&lt;WiFiS3.h&gt;</span></div>
+      <div>&nbsp;</div>
+      <div><span class="t-var">DHT</span> sensor(<span class="t-string">2</span>, DHT22);</div>
+      <div>&nbsp;</div>
+      <div><span class="t-cmd">void</span> <span class="t-var">setup</span>() {</div>
+      <div>&nbsp;&nbsp;Serial.begin(<span class="t-string">9600</span>);</div>
+      <div>&nbsp;&nbsp;sensor.begin();</div>
+      <div>&nbsp;&nbsp;WiFi.begin(<span class="t-string">SSID, PASS</span>);</div>
+      <div>}</div>
+      <div>&nbsp;</div>
+      <div><span class="t-cmd">void</span> <span class="t-var">loop</span>() {</div>
+      <div>&nbsp;&nbsp;<span class="t-var">float</span> temp = sensor.readTemperature();</div>
+      <div>&nbsp;&nbsp;uploadToCloud(temp); <span class="t-comment">// ✓ live</span></div>
+      <div>}</div>
+      <div>&nbsp;</div>
+      <div class="t-out">→ Uploading to cloud... <span style="color:#86efac">SUCCESS</span></div>
+      <div class="t-out">→ Temp: 21.4°C &nbsp;<span class="t-cursor"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT SAMSON -->
+<section id="about" style="background: var(--bg2); padding: 6rem 3rem;">
+  <div class="section-tag">THE FOUNDER</div>
+  <h2>Meet <span class="dim">Samson</span></h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3.5rem; align-items: center;">
+    
+    <div>
+      <p style="font-size: 1.05rem; color: var(--text); line-height: 1.85; margin-bottom: 1.5rem;">
+        Hey, I'm <strong style="color: var(--accent);">Samson</strong> — founder of CircuitForge and the engineer behind every project we take on. I've been building with Arduino for <strong>3–5 years</strong>, and what started as curiosity turned into a full-on passion for making hardware actually <em>do things</em>.
+      </p>
+      <p style="font-size: 0.95rem; color: var(--muted); line-height: 1.85; margin-bottom: 1.5rem;">
+        Some of my builds include an <strong style="color: var(--text);">automatic motorbike indicator system</strong> and an <strong style="color: var(--text);">ultrasonic distance tracker</strong> — both built from scratch with Arduino. I also do <strong style="color: var(--text);">3D printing</strong>, which means I can design and fabricate custom enclosures and parts for any project, not just the electronics.
+      </p>
+      <p style="font-size: 0.95rem; color: var(--muted); line-height: 1.85; margin-bottom: 2rem;">
+        When I'm not at the workbench, you'll find me at the gym. That same discipline — showing up, putting the work in, improving every session — is exactly how I approach every build.
+      </p>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+        <div style="font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3); color: var(--accent); padding: 0.4rem 1rem;">⚡ ARDUINO</div>
+        <div style="font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3); color: var(--accent); padding: 0.4rem 1rem;">🖨️ 3D PRINTING</div>
+        <div style="font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3); color: var(--accent); padding: 0.4rem 1rem;">📡 SENSORS</div>
+        <div style="font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3); color: var(--accent); padding: 0.4rem 1rem;">🏍️ AUTOMOTIVE</div>
+        <div style="font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.1em; background: rgba(34,211,238,0.08); border: 1px solid rgba(34,211,238,0.25); color: var(--accent2); padding: 0.4rem 1rem;">💪 GYM</div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+      <div style="background: var(--panel); border: 1px solid var(--border); padding: 2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+        <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em;">EXPERIENCE</div>
+        <div style="font-family: var(--display); font-size: 3rem; font-weight: 800; color: var(--accent); line-height:1;">3-5</div>
+        <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--text); letter-spacing: 0.08em;">YEARS WITH ARDUINO</div>
+      </div>
+      <div style="background: var(--panel); border: 1px solid var(--border); padding: 2rem; display: flex; flex-direction: column; gap: 0.5rem; margin-top: 2rem;">
+        <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em;">LOCATION</div>
+        <div style="font-family: var(--display); font-size: 2rem; font-weight: 800; color: var(--text); line-height:1;">CASTLE-<br>FORD</div>
+        <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--accent2); letter-spacing: 0.08em;">WEST YORKSHIRE, UK</div>
+      </div>
+      <div style="background: var(--panel); border: 1px solid var(--border); padding: 2rem; display: flex; flex-direction: column; gap: 0.5rem;">
+        <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em;">SPECIALITY</div>
+        <div style="font-size: 2.5rem; line-height:1;">🏍️</div>
+        <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--text); letter-spacing: 0.08em;">AUTOMOTIVE BUILDS</div>
+      </div>
+      <div style="background: var(--panel); border: 1px solid var(--border); padding: 2rem; display: flex; flex-direction: column; gap: 0.5rem; margin-top: 2rem;">
+        <div style="font-family: var(--mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em;">ALSO INTO</div>
+        <div style="font-size: 2.5rem; line-height:1;">🖨️</div>
+        <div style="font-family: var(--mono); font-size: 0.7rem; color: var(--text); letter-spacing: 0.08em;">3D PRINTING</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CONTACT -->
+<section id="contact" style="padding: 6rem 3rem;">
+  <div style="max-width: 680px; margin: 0 auto; text-align: center;">
+    <div class="section-tag" style="justify-content: center;">GET IN TOUCH</div>
+    <h2>Let's Build <span class="dim">Something</span></h2>
+    <p style="color: var(--muted); font-size: 0.95rem; line-height: 1.75; margin: 1rem auto 2.5rem; max-width: 480px;">
+      Tell us about your project and we'll get back to you within one business day with a free consultation.
+    </p>
+
+    <div class="contact-form">
+      <div class="form-row">
+        <div>
+          <label for="name">Full Name</label>
+          <input type="text" id="name" placeholder="Jane Smith">
+        </div>
+        <div>
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="jane@company.com">
+        </div>
+      </div>
+      <div>
+        <label for="service">Service Needed</label>
+        <select id="service">
+          <option value="">— Select a service —</option>
+          <option>Custom Prototyping</option>
+          <option>IoT Solutions</option>
+          <option>Firmware Development</option>
+          <option>Production & Supply</option>
+          <option>Training & Workshops</option>
+          <option>Technical Support</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label for="msg">Project Details</label>
+        <textarea id="msg" placeholder="Tell us about your project, timeline, and budget..."></textarea>
+      </div>
+      <button class="submit-btn">SEND ENQUIRY →</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Circuit<span>Forge</span></div>
+  <div class="footer-links">
+    <a href="#services">Services</a>
+    <a href="#products">Products</a>
+    <a href="#why">About</a>
+    <a href="#contact">Contact</a>
+    <a href="#">Privacy Policy</a>
+  </div>
+  <div class="footer-copy">© 2026 CIRCUITFORGE LTD · CASTLEFORD, UK</div>
+</footer>
+
+</body>
+</html>
